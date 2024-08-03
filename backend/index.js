@@ -14,6 +14,13 @@ import session from 'express-session';
 import connectMongo from "connect-mongodb-session"
 import {buildContext} from 'graphql-passport';
 
+import { configurePassport } from './passport/passport.js';
+
+//passport.js configuration
+configurePassport();
+
+
+
 async function startServer(){
     const app = express();
     const MongoDBStore = new connectMongo(session)
