@@ -2,9 +2,9 @@ const TransactionForm = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const form = e.target;
+		let form = e.target;
 		const formData = new FormData(form);
-		const transactionData = {
+		let transactionData = {
 			description: formData.get("description"),
 			paymentType: formData.get("paymentType"),
 			category: formData.get("category"),
@@ -13,6 +13,9 @@ const TransactionForm = () => {
 			date: formData.get("date"),
 		};
 		console.log("transactionData", transactionData);
+
+		form.reset()
+	
 	};
 
 	return (

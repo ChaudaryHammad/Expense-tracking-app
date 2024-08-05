@@ -16,7 +16,7 @@ function App() {
 				<Route path='/' element={<HomePage />} />
 				<Route path='/login' element={<LoginPage />} />
 				<Route path='/signup' element={<SignUpPage />} />
-				<Route path='/transaction' element={<TransactionPage />} />
+				<Route path='/transaction/:id' element={<TransactionPage />} />
 				<Route path='*' element={<NoteFoundPage />} />
 			</Routes>
     
