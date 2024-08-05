@@ -46,7 +46,9 @@ const userResolver = {
                 throw new Error('User already exists')
             }
 
-            const hashPassword = await bcrypt.hash(password,process.env.SECRET_SALT)
+            const salt = await bcrypt.genSalt(10);
+
+            const hashPassword = await bcrypt.hash(password,salt)
 
             const boyProfilePicture = `https://avatar.iran.liara.run/public/boy?username=${username}`
             const girlProfilePicture = `https://avatar.iran.liara.run/public/girl?username=${username}`
