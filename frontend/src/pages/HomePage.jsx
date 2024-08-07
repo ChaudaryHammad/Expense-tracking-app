@@ -2,13 +2,22 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 import Card from "../components/Card.jsx";
-import TransactionForm from "../components/TransactionForm";
+import TransactionForm from "../components/TransactionForm.jsx";
 
 import { MdLogout } from "react-icons/md";
+import { useMutation, useQuery } from "@apollo/client";
+import { LOGOUT_USER } from "../graphql/mutations/user.mutation.js";
+import toast from "react-hot-toast";
+import { GET_AUTHENTICATED_USER } from "../graphql/quries/user.query.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const HomePage = () => {
+	const {data} = useQuery(GET_AUTHENTICATED_USER)
+	const [logout,{loading,error}] = useMutation(LOGOUT_USER,{
+		refetchQueries:['getAuthenticatedUser']
+	})
+
 	const chartData = {
 		labels: ["Saving", "Expense", "Investment"],
 		datasets: [
@@ -25,11 +34,22 @@ const HomePage = () => {
 		],
 	};
 
-	const handleLogout = () => {
-		console.log("Logging out...");
+	const handleLogout = async() => {
+
+		try {
+
+			await logout()
+
+
+		toast.success("Logging out")
+			
+		} catch (error) {
+			toast.error("Error logging out")
+		}
+		
 	};
 
-	const loading = false;
+	
 
 	return (
 		<>
@@ -39,7 +59,8 @@ const HomePage = () => {
 						Spend wisely, track wisely
 					</p>
 					<img
-						src={"https://tecdn.b-cdn.net/img/new/avatars/2.webp"}
+					
+						src={data?.authUser?.profilePicture}
 						className='w-11 h-11 rounded-full border cursor-pointer'
 						alt='Avatar'
 					/>

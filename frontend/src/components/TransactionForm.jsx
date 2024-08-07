@@ -16,7 +16,7 @@ const TransactionForm = () => {
 
 		form.reset()
 	
-	};
+	}; 
 
 	return (
 		<form className='w-full max-w-lg flex flex-col gap-5 px-3' onSubmit={handleSubmit}>

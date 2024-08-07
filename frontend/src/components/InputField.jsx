@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BiShow, BiHide } from "react-icons/bi";
 
-const InputField = ({ label, id, name, type = "text", onChange, value, placeholder = "", inputtype = "", error }) => {
+const InputField = ({ label, id, name, type = "text", onChange, value, placeholder = "", inputtype = "", error, required }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const isPassword = type === "password";
@@ -23,6 +23,7 @@ const InputField = ({ label, id, name, type = "text", onChange, value, placehold
           value={value}
           onChange={onChange}
           placeholder={placeholder}
+          required={required}
         />
         <div className="absolute bottom-[-23px]">{error && <span className="text-red-500 text-sm">{error}</span>}</div>
         {isPassword && (

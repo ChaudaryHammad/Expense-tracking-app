@@ -93,13 +93,13 @@ const userResolver = {
         logout:async(_,__,context)=>{
             try {
                 await context.logout();
-                req.session.destory((err)=>{
+                context.req.session.destroy((err)=>{
                     if(err){
                         throw new Error('Error in logout')
                     }
                 })
 
-                res.clearCookie("connect.sid")
+                context.res.clearCookie("connect.sid")
                 return {message:"Logged out successfully"}
                
                 

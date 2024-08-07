@@ -1,14 +1,21 @@
 import  { useState } from "react";
 import InputField from "../components/InputField";
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from "@apollo/client";
+import { LOGIN_USER } from "../graphql/mutations/user.mutation";
+import toast from "react-hot-toast";
 
 function LoginPage() {
+
+const [login,{error,loading}] = useMutation(LOGIN_USER,{
+  refetchQueries:['getAuthenticatedUser']
+})
+const navigate = useNavigate()
 	const [loginData,setLoginData] = useState({
 		username:"",
 		password:""
 	})
-const [error,setError] = useState({})
 	const handleChange = (e)=>{
 		const {value,name} = e.target;
 		setLoginData((prev)=>({
@@ -18,37 +25,34 @@ const [error,setError] = useState({})
 
     
 	}
-const validate = () =>{
-  const newError = {}
-  if(!loginData.username){
-    newError.username = "Username is required."
-  }
-  
-  if(!loginData.password){
-    newError.password = "Password is required."
-  }
-  
-  if(loginData.password && loginData.password.length <= 6){ 
- newError.password = "Password must be at least 6 characters long."
-  }
 
-  
-  return newError
-
-}
 	const handleSubmit = async(e)=>{
 		e.preventDefault()
-    const newError = validate()
+   try {
+    await login({
+      variables:{
+        input:loginData
+      }
+    })
 
-    if(Object.keys(newError).length > 0){
-      setError(newError)
+    setLoginData({
+      username:"",
+      password:""
+    })
 
-    }else{
-		console.log(loginData);
-  }
+    
+    
+    toast.success("Login Successful")
+    
+    
+   } catch (error) {
+    console.log(`error: ${error}`);
+    toast.error("Invalid Credentials")
+   }
+  
 	}
   return (
-    <div className="my-0 mx-auto flex justify-center py-6 h-screen">
+    <div className="my-0 mx-auto flex justify-center py-6 h-screen items-center">
       <div className="h-[450px] w-[350px] bg-slate-100 z-10 rounded-md">
         <div className="text-gray-500 text-center ">
           <h1 className="text-4xl text-gray-800 font-semibold  py-4">
@@ -60,12 +64,12 @@ const validate = () =>{
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4 ">
               
-              <InputField error={error.username} label={"Username"} id={'username'} name={'username'} value={loginData.username} type="text" onChange={handleChange}/>
-              <InputField error={error.password} label={"Password"} id={'password'} name={'password'} value={loginData.password} type="password" onChange={handleChange} />
+              <InputField  label={"Username"} id={'username'} name={'username'} value={loginData.username} type="text" onChange={handleChange}/>
+              <InputField label={"Password"} id={'password'} name={'password'} value={loginData.password} type="password" onChange={handleChange} />
             
               <div className="mt-4">
-                <button type="submit" className="w-full bg-black hover:bg-gray-900 active:bg-black py-3 rounded-md">
-                  Login
+                <button disabled={loading} type="submit" className="w-full bg-black hover:bg-gray-900 active:bg-black py-3 rounded-md">
+                  {loading ? "Loading...":"Login"}
                 </button>
               </div>
 
